@@ -1,0 +1,6 @@
+# y(t) = y(t - 168 h): same hour last week. The floor every model must clear.
+base: base.yaml
+name: seasonal_naive_weekly
+model:
+  name: seasonal_naive
+  seasonal_period: 168

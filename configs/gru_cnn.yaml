@@ -1,0 +1,30 @@
+# Flagship: hybrid CNN -> GRU encoder, cross-attention decoder, RevIN, calibrated quantiles.
+# Hyper-parameters come from tune.py (Optuna TPE, scored on an inner walk-forward over 2018-H2;
+# see reports/tuning/) and were confirmed on all four 2018 quarters before any 2019+ test fold
+# was run. Two-week look-back, a deliberately small encoder and heavy dropout won: the data hold
+# ~3-4 years of hourly labels per fold, and wider/deeper variants over-fitted within 2-4 epochs.
+base: base.yaml
+name: gru_cnn
+window:
+  lookback: 336                # two weeks of hourly history
+model:
+  name: gru_cnn
+  gru_cnn:
+    d_model: 64
+    cnn_blocks: 1
+    kernel_size: 5
+    dilation_base: 2
+    gru_hidden: 128
+    gru_layers: 1
+    attention_heads: 2
+    dropout: 0.4
+    holiday_embedding_dim: 4
+    origin_anchors: false          # last-load / last-24 h anchors: no gain in selection
+    revin_exclude_holidays: false  # holiday-masked RevIN statistics: no gain in selection
+train:
+  learning_rate: 0.00085
+  weight_decay: 0.000005
+  max_epochs: 12               # short cosine schedule: the LR actually anneals before the
+  patience: 4                  # best epoch instead of early-stopping at peak LR
+backtest:
+  seeds: [0, 1, 2]

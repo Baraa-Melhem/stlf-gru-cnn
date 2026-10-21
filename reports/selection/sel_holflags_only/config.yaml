@@ -1,0 +1,99 @@
+name: sel_holflags_only
+seed: 0
+output_dir: reports/runs
+artifact_dir: artifacts
+data:
+  raw_dir: data/raw
+  load_file: continuous dataset.csv
+  operator_forecast_file: weekly pre-dispatch forecast.csv
+  clean_anomalies: true
+  anomaly_ratio: 0.5
+  anomaly_window: 168
+features:
+  calendar: true
+  holidays: true
+  weather_columns:
+  - T2M_toc
+  - QV2M_toc
+  - TQL_toc
+  - W2M_toc
+  - T2M_san
+  - QV2M_san
+  - TQL_san
+  - W2M_san
+  - T2M_dav
+  - QV2M_dav
+  - TQL_dav
+  - W2M_dav
+  mean_temperature: true
+  future_weather: true
+  timestamp: false
+  target_lags:
+  - 24
+  - 168
+window:
+  lookback: 168
+  horizon: 24
+  train_stride: 1
+  origin_hour: 0
+model:
+  name: gru_cnn
+  quantiles:
+  - 0.05
+  - 0.5
+  - 0.95
+  conformal: true
+  gru_cnn:
+    d_model: 64
+    cnn_blocks: 3
+    kernel_size: 3
+    dilation_base: 2
+    gru_hidden: 128
+    gru_layers: 2
+    attention_heads: 4
+    dropout: 0.1
+    holiday_embedding_dim: 4
+    use_cnn: true
+    use_gru: true
+    use_attention: true
+    use_revin: true
+    revin_exclude_holidays: false
+    origin_anchors: false
+  gbm:
+    n_estimators: 3000
+    learning_rate: 0.03
+    num_leaves: 63
+    min_child_samples: 40
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_lambda: 1.0
+    lags:
+    - 24
+    - 48
+    - 72
+    - 168
+    - 336
+    origin_stride: 4
+    early_stopping_rounds: 100
+  seasonal_period: 168
+train:
+  loss: pinball
+  batch_size: 256
+  max_epochs: 60
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  schedule: cosine
+  warmup_epochs: 1.0
+  patience: 8
+  grad_clip: 1.0
+  ema_decay: 0.0
+  amp: true
+  device: auto
+  deterministic: false
+backtest:
+  test_start: 2018-01-01 01:00
+  test_end: 2018-12-31 00:00
+  fold_months: 3
+  val_days: 56
+  seeds:
+  - 0

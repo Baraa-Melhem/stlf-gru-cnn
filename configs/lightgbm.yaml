@@ -1,0 +1,7 @@
+# Strong tabular baseline: quantile LightGBM, direct multi-horizon, level-normalised lags.
+base: base.yaml
+name: lightgbm
+model:
+  name: lightgbm
+backtest:
+  seeds: [0, 1, 2]             # same 3-seed ensemble as the flagship (row/column subsampling)

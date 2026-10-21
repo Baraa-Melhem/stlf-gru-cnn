@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stlf-gru-cnn"
+version = "2.0.0"
+description = "Day-ahead short-term load forecasting with a hybrid CNN-GRU-attention network, walk-forward validated on the Panama national grid."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Baraa Melhem" }]
+keywords = ["load-forecasting", "time-series", "deep-learning", "gru", "cnn", "pytorch", "energy"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "torch>=2.1",
+    "lightgbm>=4.0",
+    "matplotlib>=3.7",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+tune = ["optuna>=3.5"]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.5",
+    "optuna>=3.5",
+    "nbformat>=5.9",
+    "nbclient>=0.5",
+    "ipykernel>=6.0",
+    "openpyxl>=3.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/Baraa-Melhem/stlf-gru-cnn"
+"Original Kaggle notebook" = "https://www.kaggle.com/code/baraamelhem/stlf-based-on-gru-cnn-hybrid-model"
+
+[project.scripts]
+stlf-download = "stlf.cli.download:main"
+stlf-train = "stlf.cli.train:main"
+stlf-evaluate = "stlf.cli.evaluate:main"
+stlf-predict = "stlf.cli.predict:main"
+stlf-tune = "stlf.cli.tune:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "NPY", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+# The walkthrough adds src/ to sys.path before importing the package.
+"notebooks/*" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["stlf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"

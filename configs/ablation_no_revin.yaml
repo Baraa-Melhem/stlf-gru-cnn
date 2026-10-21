@@ -1,0 +1,8 @@
+# Ablation: no reversible instance normalisation (global scaling only).
+base: gru_cnn.yaml
+name: ablation_no_revin
+model:
+  gru_cnn:
+    use_revin: false
+backtest:
+  seeds: [0]

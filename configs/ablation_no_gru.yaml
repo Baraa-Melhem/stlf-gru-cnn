@@ -1,0 +1,8 @@
+# Ablation: CNN-only encoder (GRU removed).
+base: gru_cnn.yaml
+name: ablation_no_gru
+model:
+  gru_cnn:
+    use_gru: false
+backtest:
+  seeds: [0]

@@ -1,0 +1,6 @@
+# y(t) = y(t - 24 h): same hour yesterday (persistence of the last observed day).
+base: base.yaml
+name: seasonal_naive_daily
+model:
+  name: seasonal_naive
+  seasonal_period: 24

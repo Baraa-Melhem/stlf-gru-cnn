@@ -1,0 +1,8 @@
+# Ablation: no cross-attention decoder (GRU context + future covariates only).
+base: gru_cnn.yaml
+name: ablation_no_attention
+model:
+  gru_cnn:
+    use_attention: false
+backtest:
+  seeds: [0]

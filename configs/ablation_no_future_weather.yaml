@@ -1,0 +1,7 @@
+# Ablation: weather is only observed up to the forecast origin (no perfect weather forecast).
+base: gru_cnn.yaml
+name: ablation_no_future_weather
+features:
+  future_weather: false
+backtest:
+  seeds: [0]

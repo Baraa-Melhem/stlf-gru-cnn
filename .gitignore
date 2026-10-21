@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data and model artifacts (download with `python download_data.py`, train with `train.py`)
+data/raw/*
+!data/raw/.gitkeep
+artifacts/
+
+# Large per-run outputs; metrics, configs and figures stay versioned
+reports/**/predictions.csv.gz
+*.log
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

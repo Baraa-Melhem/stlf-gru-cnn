@@ -1,0 +1,7 @@
+# Ablation: no same-hour lag anchors (t-24 h, t-168 h) and no lagged holiday flags in the decoder.
+base: gru_cnn.yaml
+name: ablation_no_lags
+features:
+  target_lags: []
+backtest:
+  seeds: [0]

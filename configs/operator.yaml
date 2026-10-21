@@ -1,0 +1,6 @@
+# The grid operator's official weekly pre-dispatch forecast (CND Panama). Week-ahead and made
+# with weather *forecasts*: an industry reference, not a like-for-like day-ahead competitor.
+base: base.yaml
+name: operator_predispatch
+model:
+  name: operator

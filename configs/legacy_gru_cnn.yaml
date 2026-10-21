@@ -1,0 +1,27 @@
+# Faithful reproduction of the original 2024 Kaggle model: same layers, same features (12 weather
+# columns + Unix timestamp, no load history, no calendar), MSE loss, Adam at a constant 1e-3,
+# 200 epochs, batches of 1440 hours - but evaluated under the corrected protocol (chronological
+# walk-forward folds, scaler fitted on training rows only).
+base: base.yaml
+name: legacy_gru_cnn
+features:
+  calendar: false
+  holidays: false
+  mean_temperature: false
+  timestamp: true
+  target_lags: []              # the original model never saw past load
+window:
+  lookback: 1
+  train_stride: 24             # each training hour appears once per epoch, as in the original
+model:
+  name: legacy_gru_cnn
+  quantiles: [0.5]
+train:
+  loss: mse
+  batch_size: 60               # 60 windows x 24 hours = 1440 hours per batch
+  max_epochs: 200
+  learning_rate: 0.001
+  weight_decay: 0.0
+  schedule: constant
+  warmup_epochs: 0.0
+  patience: 200

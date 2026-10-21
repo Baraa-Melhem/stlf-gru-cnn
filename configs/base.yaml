@@ -1,0 +1,52 @@
+# Shared defaults for every experiment. Model files set `base: base.yaml` and override only
+# what differs. Every key maps 1:1 onto a dataclass in src/stlf/config.py; unknown keys fail.
+seed: 0
+output_dir: reports/runs
+artifact_dir: artifacts
+
+data:
+  raw_dir: data/raw
+  load_file: continuous dataset.csv
+  operator_forecast_file: weekly pre-dispatch forecast.csv
+  clean_anomalies: true        # interpolate blackout hours (load < 50% of trailing weekly median)
+  anomaly_ratio: 0.5
+  anomaly_window: 168
+
+features:
+  calendar: true               # cyclical hour / weekday / day-of-year + weekend flag
+  holidays: true               # holiday + school flags, holiday-id embedding
+  mean_temperature: true       # mean of the three cities' 2 m temperature
+  future_weather: true         # weather over the horizon treated as known (perfect-forecast assumption)
+  timestamp: false             # raw Unix time - only the legacy reproduction uses it
+  target_lags: [24, 168]       # decoder anchors: same hour yesterday and last week
+
+window:
+  lookback: 168                # one week of hourly history
+  horizon: 24                  # day-ahead: 24 hourly targets per forecast
+  train_stride: 1              # every hour is a training origin
+  origin_hour: 0               # test forecasts are issued at midnight
+
+model:
+  quantiles: [0.05, 0.5, 0.95] # median point forecast + 90% prediction interval
+  conformal: true              # widen/narrow the interval to hit 90% on the validation block
+
+train:
+  loss: pinball
+  batch_size: 256
+  max_epochs: 60
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  schedule: cosine             # linear warm-up, then cosine decay
+  warmup_epochs: 1.0
+  patience: 8
+  grad_clip: 1.0
+  amp: true
+  device: auto
+  deterministic: false         # true = bit-exact cuDNN kernels, ~10x slower on GPU
+
+backtest:
+  test_start: "2019-01-01 01:00"   # 18 months of walk-forward test data: 2019-01 .. 2020-06
+  test_end: null
+  fold_months: 3                   # 6 expanding-window folds, each retrained from scratch
+  val_days: 56                     # 8-week early-stopping block right before each test fold
+  seeds: [0]

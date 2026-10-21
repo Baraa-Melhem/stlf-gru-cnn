@@ -1,0 +1,16 @@
+# Best trial of the 2018-H2 inner-backtest search (trial 1 of 20; see trials_recovered.csv).
+inner_mape: 2.5469
+params:
+  d_model: 64
+  attention_heads: 2
+  cnn_blocks: 1
+  kernel_size: 5
+  gru_hidden: 128
+  gru_layers: 1
+  dropout: 0.3986
+  origin_anchors: false
+  revin_exclude_holidays: false
+  learning_rate: 0.000851
+  weight_decay: 4.71e-06
+  lookback: 336
+  max_epochs: 12
